@@ -1,0 +1,172 @@
+<div class="row mt-4">
+  <div class="col-md-6 d-none d-md-block" style="height: 450px">
+    <div class="text-center col-md-12 my-auto side-header">
+      <h1>Cadastro de Usuário</h1>
+      <img
+        src="../../../../assets/registerImage.png"
+        class="my-4"
+        alt=""
+        width="400px"
+      />
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <form class="p-1" [formGroup]="form">
+      <div class="pb-2 d-block d-md-none">
+        <h3 class="border-bottom">Cadastro de Usuário</h3>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-6">
+          <label>Primeiro Nome</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="cssValidator(f.firstName)"
+            formControlName="firstName"
+            placeholder="Insira o Primeiro nome"
+          />
+          <div *ngIf="f.firstName.errors?.required" class="invalid-feedback">
+            Primeiro nome é obrigatório
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label>Último nome</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="cssValidator(f.lastName)"
+            formControlName="lastName"
+            placeholder="Insira o Último nome"
+          />
+          <div *ngIf="f.lastName.errors?.required" class="invalid-feedback">
+            Último nome é obrigatório
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="">E-mail:</label>
+        <input
+          class="form-control"
+          [ngClass]="cssValidator(f.email)"
+          formControlName="email"
+          type="text"
+          placeholder="Insira o Nome Completo"
+        />
+      </div>
+      <div
+        *ngIf="f.email.errors?.required && f.email.touched"
+        class="invalid-feedback d-block"
+      >
+        E-mail é obrigatório
+      </div>
+      <div
+        *ngIf="f.email.errors?.email && f.email.touched"
+        class="invalid-feedback d-block"
+      >
+        E-mail deve ser válido
+      </div>
+      <div class="form-group">
+        <label for="">Usuario:</label>
+        <input
+          class="form-control"
+          [ngClass]="cssValidator(f.userName)"
+          formControlName="userName"
+          type="text"
+          placeholder="Insira o nome de Usuário"
+        />
+      </div>
+
+      <div
+        *ngIf="f.userName.errors?.required && f.userName.touched"
+        class="invalid-feedback d-block"
+      >
+        Usuário é obrigatório
+      </div>
+      <div
+        *ngIf="f.userName.errors?.maxlength && f.userName.touched"
+        class="invalid-feedback d-block"
+      >
+        Usuário deve ter no máximo 30 caracteres
+      </div>
+      <div
+        *ngIf="f.userName.errors?.minlength && f.userName.touched"
+        class="invalid-feedback d-block"
+      >
+        Usuário deve ter no mínimo 4 caracteres
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-6">
+          <label for="">Senha:</label>
+          <input
+            class="form-control"
+            [ngClass]="cssValidator(f.password)"
+            formControlName="password"
+            type="password"
+            placeholder="Digite uma Senha"
+          />
+          <div *ngIf="f.password.errors?.required" class="invalid-feedback">
+            Senha é obrigatório
+          </div>
+          <div *ngIf="f.password.errors?.maxlength" class="invalid-feedback">
+            Senha deve ter no máximo 20 caracteres
+          </div>
+          <div *ngIf="f.password.errors?.minlength" class="invalid-feedback">
+            Senha deve ter no mínimo 8 caracteres
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label for="">Confirmar Senha:</label>
+          <input
+            class="form-control"
+            [ngClass]="cssValidator(f.confirmPassword)"
+            formControlName="confirmPassword"
+            type="password"
+            placeholder="Confirme a Senha"
+          />
+          <div
+            *ngIf="f.confirmPassword.errors?.required"
+            class="invalid-feedback"
+          >
+            Confirmação da senha é obrigatório
+          </div>
+          <div
+            *ngIf="f.confirmPassword.errors?.mustMatch"
+            class="invalid-feedback"
+          >
+            As senhas não conferem
+          </div>
+        </div>
+      </div>
+      <div class="row p-1 mb-3">
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="customCheck1"
+          />
+          <label class="custom-control-label"
+            >Eu concordo com os <a href="#">Termos de Uso</a>.</label
+          >
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <button
+            class="btn btn-success btn-block px-5"
+            [disabled]="!form.valid"
+          >
+            Registar
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <a class="btn btn-link btn-block" routerLink="/user/login">
+            Já sou Cadastrado
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
