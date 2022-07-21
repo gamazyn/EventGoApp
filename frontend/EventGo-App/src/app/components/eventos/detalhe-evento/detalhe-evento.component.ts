@@ -84,7 +84,7 @@ export class DetalheEventoComponent implements OnInit {
   public loadEvent(): void {
     this.eventoId = +this.activatedRouter.snapshot.paramMap.get('id');
 
-    if (this.eventoId !== null || this.eventoId === 0) {
+    if (this.eventoId !== null && this.eventoId !== 0) {
       this.saveState = 'put';
 
       this.spinner.show();
@@ -186,6 +186,10 @@ export class DetalheEventoComponent implements OnInit {
     this.form.reset();
   }
 
+  public returnLoteName(nome: string): string {
+    return nome === null || nome === '' ? 'Nome do Lote' : nome;
+  }
+
   public cssValidator(fieldName: FormControl | AbstractControl | null): any {
     return {
       'is-invalid': fieldName?.errors && fieldName?.touched,
@@ -216,9 +220,8 @@ export class DetalheEventoComponent implements OnInit {
   }
 
   public saveLotes(): void {
-    this.spinner.show();
-
     if (this.form.controls['lotes'].valid) {
+      this.spinner.show();
       this.loteService
         .saveLote(this.eventoId, this.form.value.lotes)
         .subscribe({
