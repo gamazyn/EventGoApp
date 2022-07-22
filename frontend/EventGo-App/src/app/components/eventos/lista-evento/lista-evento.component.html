@@ -31,7 +31,7 @@
           <button
             type="button"
             class="btn btn-outline-light btn-sm"
-            (click)="showImg()"
+            (click)="changeVisualization()"
           >
             <i class="{{ !displayImg ? 'fa fa-eye' : 'fa fa-eye-slash' }}"></i>
             {{ !displayImg ? "Exibir" : "Ocultar" }}
@@ -57,7 +57,7 @@
           <img
             [collapse]="!displayImg"
             [isAnimated]="true"
-            src="/assets/{{ e.imagemURL }}"
+            [src]="showImage(e.imagemURL)"
             [style.width.px]="imgWidth"
             [style.margin.px]="imgMargin"
           />

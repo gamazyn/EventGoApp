@@ -5,6 +5,7 @@
 // eslint-disable-next-line import/prefer-default-export
 export const environment = {
   production: false,
+  apiURL: 'https://localhost:5001/',
 };
 
 /*

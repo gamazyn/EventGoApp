@@ -12,6 +12,7 @@ import { Evento } from '@app/models/Evento';
 import { Lote } from '@app/models/Lote';
 import { EventoService } from '@app/services/evento.service';
 import { LoteService } from '@app/services/lote.service';
+import { environment } from '@environments/environment';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -32,6 +33,10 @@ export class DetalheEventoComponent implements OnInit {
   form!: FormGroup;
 
   saveState: any = 'post';
+
+  imageURL: any = 'assets/upload.png';
+
+  file: File;
 
   currentLote = { id: 0, nome: '', index: 0 };
 
@@ -95,6 +100,9 @@ export class DetalheEventoComponent implements OnInit {
           next: (evento: Evento) => {
             this.evento = { ...evento };
             this.form.patchValue(this.evento);
+            if (this.evento.imagemURL !== '') {
+              this.imageURL = `${environment.apiURL}resources/images/${this.evento.imagemURL}`;
+            }
             this.evento.lotes.forEach((lote) => {
               this.lotes.push(this.createLote(lote));
             });
@@ -126,7 +134,7 @@ export class DetalheEventoComponent implements OnInit {
         ],
       ],
       qtdPessoas: ['', [Validators.required, Validators.max(10000)]],
-      imagemURL: ['', Validators.required],
+      imagemURL: [''],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       lotes: this.fb.array([]),
@@ -188,6 +196,41 @@ export class DetalheEventoComponent implements OnInit {
 
   public returnLoteName(nome: string): string {
     return nome === null || nome === '' ? 'Nome do Lote' : nome;
+  }
+
+  public onFileChange(ev: any): void {
+    const reader = new FileReader();
+
+    // eslint-disable-next-line no-return-assign
+    reader.onload = (event: any) => (this.imageURL = event.target.result);
+
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImage();
+  }
+
+  public uploadImage(): void {
+    this.spinner.show();
+    this.eventoService
+      .imageUpload(this.eventoId, this.file)
+      .subscribe({
+        next: () => {
+          this.loadEvent();
+          this.toastr.success(
+            'Imagem atualizada com sucesso!',
+            'Imagem Atualizada!'
+          );
+        },
+        error: (err: any) => {
+          this.toastr.error(
+            'Ocorreu um erro ao tentar atualizar a imagem.',
+            'Erro!'
+          );
+          console.error(err);
+        },
+      })
+      .add(() => this.spinner.hide());
   }
 
   public cssValidator(fieldName: FormControl | AbstractControl | null): any {
