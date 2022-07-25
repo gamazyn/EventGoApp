@@ -44,9 +44,8 @@ namespace EventGo.Persistence
             }
 
             query = query.OrderBy(o => o.Id)
-                    .Where(o => o.Nome.ToLower()
+                    .Where(o => o.User.FirstName.ToLower()
                     .Contains(nome.ToLower()));
-
             return await query.ToArrayAsync();
         }
 

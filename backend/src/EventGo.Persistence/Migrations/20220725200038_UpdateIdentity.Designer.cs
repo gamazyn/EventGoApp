@@ -3,14 +3,16 @@ using System;
 using EventGo.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EventGo.Persistence.Migrations
 {
     [DbContext(typeof(EventGoContext))]
-    partial class EventGoContextModelSnapshot : ModelSnapshot
+    [Migration("20220725200038_UpdateIdentity")]
+    partial class UpdateIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
