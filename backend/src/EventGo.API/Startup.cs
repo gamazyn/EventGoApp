@@ -14,6 +14,13 @@ using System;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
+using EventGo.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Collections.Generic;
 
 namespace EventGo.API
 {
@@ -33,8 +40,40 @@ namespace EventGo.API
             services.AddDbContext<EventGoContext>(
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
+
+            services.AddIdentityCore<User>(opt =>
+                {
+                    opt.Password.RequiredLength = 4;
+                    opt.Password.RequireLowercase = false;
+                    opt.Password.RequireUppercase = false;
+                    opt.Password.RequireNonAlphanumeric = false;
+                    opt.Password.RequireDigit = false;
+                }
+            )
+            .AddRoles<Role>()
+            .AddRoleManager<RoleManager<Role>>()
+            .AddSignInManager<SignInManager<User>>()
+            .AddRoleValidator<RoleValidator<Role>>()
+            .AddEntityFrameworkStores<EventGoContext>()
+            .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(opt =>
+                        {
+                            opt.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuerSigningKey = true,
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
+                                ValidateIssuer = false,
+                                ValidateAudience = false
+                            };
+                        });
+
             services.AddControllers()
-                    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
+                    .AddJsonOptions(
+                        opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+                    .AddNewtonsoftJson(
+                        opt => opt.SerializerSettings.ReferenceLoopHandling =
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore
                     );
 
@@ -42,15 +81,45 @@ namespace EventGo.API
 
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<ILoteService, LoteService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IGeralPersistence, GeralPersistence>();
             services.AddScoped<IEventoPersistence, EventoPersistence>();
             services.AddScoped<ILotePersistence, LotePersistence>();
+            services.AddScoped<IUserPersistence, UserPersistence>();
 
             services.AddCors();
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(opt =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "EventGo.API", Version = "v1" });
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "EventGo.API", Version = "v1" });
+                opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header usando BearerToken.
+                                    Entre com 'Bearer' [espaço] e então coloque seu token.
+                                    Exemplo: 'Bearer 21965safsikjw4'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                opt.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer",
+                                },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
             });
         }
 
@@ -68,6 +137,7 @@ namespace EventGo.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());

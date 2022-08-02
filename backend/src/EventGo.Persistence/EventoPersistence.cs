@@ -15,7 +15,7 @@ namespace EventGo.Persistence
 
         }
 
-        public async Task<Evento[]> GetAllEventosAsync(bool includeOrganizadores = false)
+        public async Task<Evento[]> GetAllEventosAsync(int userId, bool includeOrganizadores = false)
         {
             IQueryable<Evento> query = _context.Eventos
                 .Include(e => e.Lotes)
@@ -28,12 +28,12 @@ namespace EventGo.Persistence
                     .ThenInclude(oe => oe.Organizador);
             }
 
-            query = query.OrderBy(e => e.Id);
+            query = query.Where(e => e.UserId == userId).OrderBy(e => e.Id);
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includeOrganizadores = false)
+        public async Task<Evento[]> GetAllEventosByTemaAsync(int userId, string tema, bool includeOrganizadores = false)
         {
             IQueryable<Evento> query = _context.Eventos
                 .Include(e => e.Lotes)
@@ -47,13 +47,13 @@ namespace EventGo.Persistence
             }
 
             query = query.OrderBy(e => e.Id)
-                    .Where(e => e.Tema.ToLower()
-                    .Contains(tema.ToLower()));
+                    .Where(e => e.Tema.ToLower().Contains(tema.ToLower()) &&
+                                e.UserId == userId);
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Evento> GetEventoByIdAsync(int eventoId, bool includeOrganizadores = false)
+        public async Task<Evento> GetEventoByIdAsync(int userId, int eventoId, bool includeOrganizadores = false)
         {
             IQueryable<Evento> query = _context.Eventos
                 .Include(e => e.Lotes)
@@ -67,7 +67,7 @@ namespace EventGo.Persistence
             }
 
             query = query.OrderBy(e => e.Id)
-                    .Where(e => e.Id == eventoId);
+                    .Where(e => e.Id == eventoId && e.UserId == userId);
 
             return await query.FirstOrDefaultAsync();
         }

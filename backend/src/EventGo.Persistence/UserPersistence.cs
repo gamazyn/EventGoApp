@@ -26,9 +26,9 @@ namespace EventGo.Persistence
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<User> GetUserbyUsernameAsync(string username)
+        public async Task<User> GetUserbyUserNameAsync(string userName)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.UserName == username.ToLower());
+            return await _context.Users.SingleOrDefaultAsync(u => u.UserName == userName.ToLower());
         }
     }
 }

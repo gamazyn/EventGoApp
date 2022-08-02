@@ -10,8 +10,7 @@ namespace EventGo.Application.Dtos
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         public string Local { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório."),
-        Display(Name = "Data Evento")]
+        [Display(Name = "Data Evento")]
         public string DataEvento { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório."),
@@ -34,7 +33,8 @@ namespace EventGo.Application.Dtos
         EmailAddress(ErrorMessage = "Precisa ser um {0} válido."),
         Required(ErrorMessage = "O campo {0} é obrigatório.")]
         public string Email { get; set; }
-
+        public int UserId { get; set; }
+        public UserDTO UserDTO { get; set; }
         public IEnumerable<LoteDTO> Lotes { get; set; }
 
         public IEnumerable<RedeSocialDTO> RedeSociais { get; set; }

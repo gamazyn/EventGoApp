@@ -10,6 +10,6 @@ namespace EventGo.Persistence.Contracts
     {
         Task<IEnumerable<User>> GetUserAsync();
         Task<User> GetUserByIdAsync(int id);
-        Task<User> GetUserbyUsernameAsync(string username);
+        Task<User> GetUserbyUserNameAsync(string userName);
     }
 }

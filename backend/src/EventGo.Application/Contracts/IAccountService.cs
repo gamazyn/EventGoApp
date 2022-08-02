@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EventGo.Application.Contracts
 {
-    public interface IUserService
+    public interface IAccountService
     {
-        Task<bool> UserExistsAsync(string username);
-        Task<UserUpdateDTO> GetUserByUsernameAsync(string username);
+        Task<bool> UserExistsAsync(string userName);
+        Task<UserUpdateDTO> GetUserByUserNameAsync(string userName);
         Task<SignInResult> CheckUserPasswordAsync(UserUpdateDTO userUpdateDTO, string password);
         Task<UserDTO> CreateAccountAsync(UserDTO userDTO);
         Task<UserUpdateDTO> UpdateUserAsync(UserUpdateDTO userUpdateDTO);

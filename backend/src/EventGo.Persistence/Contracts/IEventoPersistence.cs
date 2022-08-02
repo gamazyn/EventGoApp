@@ -6,8 +6,8 @@ namespace EventGo.Persistence.Contracts
     public interface IEventoPersistence
     {
         //Comandos Eventos
-        Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includeOrganizadores);
-        Task<Evento[]> GetAllEventosAsync(bool includeOrganizadores);
-        Task<Evento> GetEventoByIdAsync(int eventoId, bool includeOrganizadores);
+        Task<Evento[]> GetAllEventosByTemaAsync(int userId, string tema, bool includeOrganizadores = false);
+        Task<Evento[]> GetAllEventosAsync(int userId, bool includeOrganizadores = false);
+        Task<Evento> GetEventoByIdAsync(int userId, int eventoId, bool includeOrganizadores = false);
     }
 }

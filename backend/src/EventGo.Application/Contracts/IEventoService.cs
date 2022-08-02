@@ -6,11 +6,11 @@ namespace EventGo.Application.Contracts
 {
     public interface IEventoService
     {
-        Task<EventoDTO> AddEventos(EventoDTO model);
-        Task<EventoDTO> UpdateEvento(int eventoId, EventoDTO model);
-        Task<bool> DeleteEvento(int eventoId);
-        Task<EventoDTO[]> GetAllEventosAsync(bool includeOrganizadores = false);
-        Task<EventoDTO[]> GetAllEventosByTemaAsync(string tema, bool includeOrganizadores = false);
-        Task<EventoDTO> GetEventoByIdAsync(int eventoId, bool includeOrganizadores = false);
+        Task<EventoDTO> AddEventos(int userId, EventoDTO model);
+        Task<EventoDTO> UpdateEvento(int userId, int eventoId, EventoDTO model);
+        Task<bool> DeleteEvento(int userId, int eventoId);
+        Task<EventoDTO[]> GetAllEventosAsync(int userId, bool includeOrganizadores = false);
+        Task<EventoDTO[]> GetAllEventosByTemaAsync(int userId, string tema, bool includeOrganizadores = false);
+        Task<EventoDTO> GetEventoByIdAsync(int userId, int eventoId, bool includeOrganizadores = false);
     }
 }
