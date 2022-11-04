@@ -12,7 +12,7 @@ namespace EventGo.Application.Contracts
         Task<bool> UserExistsAsync(string userName);
         Task<UserUpdateDTO> GetUserByUserNameAsync(string userName);
         Task<SignInResult> CheckUserPasswordAsync(UserUpdateDTO userUpdateDTO, string password);
-        Task<UserDTO> CreateAccountAsync(UserDTO userDTO);
+        Task<UserUpdateDTO> CreateAccountAsync(UserDTO userDTO);
         Task<UserUpdateDTO> UpdateUserAsync(UserUpdateDTO userUpdateDTO);
 
     }

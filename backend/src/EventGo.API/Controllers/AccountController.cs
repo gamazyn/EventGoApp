@@ -56,7 +56,12 @@ namespace EventGo.API.Controllers
 
                 var user = await _accountService.CreateAccountAsync(userDTO);
                 if (user != null)
-                    return Ok($"Usuário cadastrado: {user.UserName}");
+                    return Ok(new
+                    {
+                        UserName = user.UserName,
+                        FirstName = user.FirstName,
+                        Token = _tokenService.CreateToken(user).Result
+                    });
 
                 return BadRequest("Usuário não criado. Tente novamente.");
             }
@@ -98,6 +103,8 @@ namespace EventGo.API.Controllers
         {
             try
             {
+                if (userUpdateDTO.UserName != User.GetUserName()) return Unauthorized("Usuário Inválido");
+
                 var user = await _accountService.GetUserByUserNameAsync(User.GetUserName());
                 if (user == null) return Unauthorized("Usuário inválido.");
 
@@ -105,7 +112,12 @@ namespace EventGo.API.Controllers
                 if (userReturn == null)
                     return NoContent();
 
-                return Ok(userReturn);
+                return Ok(new
+                {
+                    UserName = userReturn.UserName,
+                    FirstName = userReturn.FirstName,
+                    Token = _tokenService.CreateToken(userReturn).Result
+                });
             }
             catch (Exception ex)
             {

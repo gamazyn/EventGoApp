@@ -12,7 +12,7 @@
   </div>
 
   <div class="col-md-6">
-    <form class="p-1" [formGroup]="form">
+    <form class="p-1" [formGroup]="form" (ngSubmit)="register()">
       <div class="pb-2 d-block d-md-none">
         <h3 class="border-bottom">Cadastro de Usuário</h3>
       </div>
@@ -155,6 +155,7 @@
           <button
             class="btn btn-success btn-block px-5"
             [disabled]="!form.valid"
+            type="submit"
           >
             Registar
           </button>

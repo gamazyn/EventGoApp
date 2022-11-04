@@ -6,7 +6,11 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { FieldValidator } from '@app/helpers/FieldValidator';
+import { User } from '@app/models/identity/User';
+import { AccountService } from '@app/services/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registration',
@@ -14,13 +18,20 @@ import { FieldValidator } from '@app/helpers/FieldValidator';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
+  user = {} as User;
+
   form!: FormGroup;
 
   get f(): any {
     return this.form.controls;
   }
 
-  constructor(public fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private accountService: AccountService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.validation();
@@ -48,7 +59,7 @@ export class RegistrationComponent implements OnInit {
           '',
           [
             Validators.required,
-            Validators.minLength(8),
+            Validators.minLength(6),
             Validators.maxLength(20),
           ],
         ],
@@ -58,9 +69,18 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public cssValidator(fieldName: FormControl): any {
     return {
       'is-invalid': fieldName.errors && fieldName.touched,
     };
+  }
+
+  public register(): void {
+    this.user = { ...this.form.value };
+    this.accountService.register(this.user).subscribe({
+      next: () => this.router.navigateByUrl('/dashboard'),
+      error: (err: any) => console.error(err),
+    });
   }
 }

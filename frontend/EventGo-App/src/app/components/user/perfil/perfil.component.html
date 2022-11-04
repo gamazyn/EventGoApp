@@ -1,7 +1,7 @@
-<app-title [title]="'Perfil'"></app-title>
+<app-title [title]="'Perfil'" [iconClass]="'fas fa-id-card'"></app-title>
 
 <div class="card rounded shadow-sm">
-  <form>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="row p-3">
       <div class="col-lg-3 pt-1">
         <div class="card mb-3">
@@ -18,22 +18,21 @@
             </a>
           </div>
           <div class="card-body">
-            <div class="h4 text-center mb-3">@UserName</div>
-            <div class="h7 text-bold pb-1"><b>Nome:</b> Miracles Lee Cross</div>
-            <div class="h7">
-              Developer of web applications, JavaScript, PHP, Java, Python,
-              Ruby, Java, Node.js, etc.
+            <div class="h4 text-center mb-3">@{{ f.userName.value }}</div>
+            <div class="h7 text-bold pb-1">
+              <b>Nome:</b> {{ f.firstName.value + " " + f.lastName.value }}
             </div>
+            <div class="h7">{{ f.description.value }}</div>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <div class="row">
                 <div class="col-6 text-center border-right">
-                  <div class="h5">1342</div>
-                  <div class="h6 text-muted">Eventos Ministrados</div>
+                  <div class="h5">0</div>
+                  <div class="h6 text-muted">Eventos Criados</div>
                 </div>
                 <div class="col-6 text-center">
-                  <div class="h5">1342</div>
+                  <div class="h5">0</div>
                   <div class="h6 text-muted">Eventos Participados</div>
                 </div>
               </div>
@@ -54,15 +53,14 @@
               formControlName="title"
               [ngClass]="cssValidator(f.title)"
             >
-              <option value=""></option>
-              <option value="0">Não Quero</option>
-              <option value="Senhorita">Tecnólogo(a)</option>
-              <option value="Senhorita">Bacharel</option>
-              <option value="Senhorita">Especialista</option>
-              <option value="Senhorita">Pós Graduado(a)</option>
-              <option value="Senhorita">Mestre</option>
-              <option value="Senhorita">Doutor(a)</option>
-              <option value="Senhorita">Pós Doc</option>
+              <option value="NaoInformado">Não Quero</option>
+              <option value="Tecnologo">Tecnólogo(a)</option>
+              <option value="Bacharel">Bacharel</option>
+              <option value="Especialista">Especialista</option>
+              <option value="PosGraduado">Pós Graduado(a)</option>
+              <option value="Mestrado">Mestre</option>
+              <option value="Doutorado">Doutor(a)</option>
+              <option value="PosDoutorado">Pós Doc</option>
             </select>
             <div *ngIf="f.title.errors?.required" class="invalid-feedback">
               Selecione um título
@@ -120,10 +118,13 @@
             <input
               type="text"
               class="form-control"
-              formControlName="telephone"
-              [ngClass]="cssValidator(f.telephone)"
+              formControlName="phoneNumber"
+              [ngClass]="cssValidator(f.phoneNumber)"
             />
-            <div *ngIf="f.telephone.errors?.required" class="invalid-feedback">
+            <div
+              *ngIf="f.phoneNumber.errors?.required"
+              class="invalid-feedback"
+            >
               Telefone é obrigatório
             </div>
           </div>
@@ -131,18 +132,18 @@
             <label>Função</label>
             <select
               class="form-select"
-              formControlName="role"
-              [ngClass]="cssValidator(f.role)"
+              formControlName="function"
+              [ngClass]="cssValidator(f.function)"
             >
-              <option value=""></option>
+              <option value="NaoInformado">Não Informado</option>
               <option value="Participante">Participante</option>
               <option value="Palestrante">Palestrante</option>
             </select>
-            <div *ngIf="f.role.errors?.required" class="invalid-feedback">
+            <div *ngIf="f.function.errors?.required" class="invalid-feedback">
               Função é obrigatório
             </div>
           </div>
-          <form-group class="col-12">
+          <div class="form-group-lg col-12">
             <label>Descrição</label>
             <input
               type="text"
@@ -150,13 +151,13 @@
               formControlName="description"
               [ngClass]="cssValidator(f.description)"
             />
-            <div *ngIf="f.role.errors?.required" class="invalid-feedback">
+            <div *ngIf="f.function.errors?.required" class="invalid-feedback">
               Descrição é obrigatório
             </div>
-            <div *ngIf="f.role.errors?.maxlength" class="invalid-feedback">
+            <div *ngIf="f.function.errors?.maxlength" class="invalid-feedback">
               Descrição deve conter até 300 caracteres
             </div>
-          </form-group>
+          </div>
         </div>
         <div>
           <h3 class="pt-3 border-bottom">Mudar Senha</h3>
